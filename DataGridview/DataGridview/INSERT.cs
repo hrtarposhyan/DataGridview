@@ -13,7 +13,7 @@ namespace DataGridview
 {
     public partial class INSERT : Form
     {
-        private SqlConnection SqlConnection;
+        private SqlConnection SqlConnection=null;
         public INSERT(SqlConnection connection)
         {
             InitializeComponent();

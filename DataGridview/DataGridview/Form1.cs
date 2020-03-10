@@ -90,5 +90,65 @@ namespace DataGridview
             INSERT insert = new INSERT(SqlConnection);
             insert.Show();
         }
+
+        private void toolStripButton2_Click(object sender, EventArgs e) // UPDATE
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                UPDATE update = new UPDATE(SqlConnection, Convert.ToInt32(listView1.SelectedItems[0].SubItems[0].Text));
+                update.Show();
+            }
+            else
+            {
+                MessageBox.Show("Not a single line was selected!!!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
+        }
+
+        private async void toolStripButton3_Click(object sender, EventArgs e)  // DELETE
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                DialogResult res = MessageBox.Show("Do you really want to delete this line?", "Delete line", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+
+                switch (res)
+                {
+                    case DialogResult.OK:
+
+                        SqlCommand deleteSqlCommand = new SqlCommand("DELETE FROM [Students] WHERE [Id]=@Id", SqlConnection);
+
+                        deleteSqlCommand.Parameters.AddWithValue("Id", Convert.ToInt32(listView1.SelectedItems[0].SubItems[0].Text));
+
+                        try
+                        {
+                            await deleteSqlCommand.ExecuteNonQueryAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+
+                        listView1.Clear();
+
+                        await LoadStudentsAsync();
+
+                        break;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Not a single line was selected!!!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e) // FILE EXIT
+        {
+            Application.Exit();
+        }
+
+        private void aboutTheProgramToolStripMenuItem_Click(object sender, EventArgs e)   //REFERENCE 
+        {
+            MessageBox.Show("WorkingWithRemoteDb\n C#, 2020", "About the program", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }
